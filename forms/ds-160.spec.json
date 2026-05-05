@@ -1,0 +1,270 @@
+{
+  "formId": "ds-160",
+  "formName": "Online Nonimmigrant Visa Application",
+  "authority": "U.S. Department of State",
+  "submissionUrl": "https://ceac.state.gov/genniv/",
+  "pages": [
+    {
+      "pageId": "personal_info_1",
+      "pageTitle": "Personal Information 1",
+      "description": "NOTE: Data on this page must match the information as it is written in your passport.",
+      "fields": [
+        {
+          "fieldId": "passport_extract",
+          "label": "Passport Photo Upload",
+          "helpText": "Upload a photo of your passport bio page to auto-fill your personal information.",
+          "type": "passport_extract",
+          "required": true
+        },
+        {
+          "fieldId": "surnames",
+          "label": "Surnames",
+          "helpText": "Enter all surnames as listed in your passport. If only one name is listed in your passport, enter that Surname.",
+          "type": "text",
+          "required": true,
+          "prefillStrategy": "from_passport"
+        },
+        {
+          "fieldId": "given_names",
+          "label": "Given Names",
+          "helpText": "If your passport does not include a given name, please enter 'FNU' in Given Names.",
+          "type": "text",
+          "required": true,
+          "prefillStrategy": "from_passport"
+        },
+        {
+          "fieldId": "full_name_native_alphabet",
+          "label": "Full Name in Native Alphabet",
+          "helpText": "Enter your full name as written in your native alphabet, if applicable. Check 'Does Not Apply' if not relevant.",
+          "type": "text",
+          "required": false
+        },
+        {
+          "fieldId": "other_names_used",
+          "label": "Have you ever used other names (i.e., maiden, religious, professional, alias, etc.)?",
+          "helpText": "Other names used include your maiden name, religious name, professional name, or any other names which you are known by or have been known by in the past.",
+          "type": "yes_no_with_followup",
+          "required": true
+        },
+        {
+          "fieldId": "sex",
+          "label": "Sex",
+          "helpText": "Please select MALE or FEMALE.",
+          "type": "radio",
+          "required": true,
+          "options": [
+            { "value": "M", "label": "MALE" },
+            { "value": "F", "label": "FEMALE" }
+          ],
+          "prefillStrategy": "from_passport"
+        },
+        {
+          "fieldId": "marital_status",
+          "label": "Marital Status",
+          "type": "select",
+          "required": true,
+          "options": [
+            { "value": "S", "label": "SINGLE" },
+            { "value": "M", "label": "MARRIED" },
+            { "value": "W", "label": "WIDOWED" },
+            { "value": "D", "label": "DIVORCED" },
+            { "value": "SEP", "label": "SEPARATED" },
+            { "value": "O", "label": "OTHER" }
+          ]
+        },
+        {
+          "fieldId": "date_of_birth",
+          "label": "Date of Birth",
+          "helpText": "If day or month is unknown, enter as shown in passport. Format: DD-MMM-YYYY.",
+          "type": "date",
+          "required": true,
+          "prefillStrategy": "from_passport"
+        },
+        {
+          "fieldId": "city_of_birth",
+          "label": "City of Birth",
+          "type": "text",
+          "required": true
+        },
+        {
+          "fieldId": "country_of_birth",
+          "label": "Country/Region of Birth",
+          "helpText": "Select the name that is currently in use for the place where you were born.",
+          "type": "select",
+          "required": true,
+          "options": [
+            { "value": "INDIA", "label": "INDIA" },
+            { "value": "CHINA", "label": "CHINA" },
+            { "value": "MEXICO", "label": "MEXICO" },
+            { "value": "PHILIPPINES", "label": "PHILIPPINES" },
+            { "value": "UNITED KINGDOM", "label": "UNITED KINGDOM" },
+            { "value": "CANADA", "label": "CANADA" },
+            { "value": "GERMANY", "label": "GERMANY" },
+            { "value": "FRANCE", "label": "FRANCE" },
+            { "value": "BRAZIL", "label": "BRAZIL" },
+            { "value": "AUSTRALIA", "label": "AUSTRALIA" },
+            { "value": "JAPAN", "label": "JAPAN" },
+            { "value": "SOUTH KOREA", "label": "SOUTH KOREA" },
+            { "value": "NIGERIA", "label": "NIGERIA" },
+            { "value": "PAKISTAN", "label": "PAKISTAN" },
+            { "value": "UNITED STATES OF AMERICA", "label": "UNITED STATES OF AMERICA" },
+            { "value": "OTHER", "label": "OTHER" }
+          ]
+        }
+      ]
+    },
+    {
+      "pageId": "travel_information",
+      "pageTitle": "Travel Information",
+      "description": "NOTE: Provide the following information concerning your travel plans.",
+      "fields": [
+        {
+          "fieldId": "purpose_of_trip",
+          "label": "Purpose of Trip to the U.S.",
+          "helpText": "Select the visa class that best describes your purpose for traveling to the United States.",
+          "type": "select",
+          "required": true,
+          "options": [
+            { "value": "B", "label": "TEMP. BUSINESS OR PLEASURE VISITOR (B)" },
+            { "value": "F", "label": "STUDENT (F)" },
+            { "value": "H1B", "label": "TEMPORARY WORKER (H1B)" },
+            { "value": "J", "label": "EXCHANGE VISITOR (J)" },
+            { "value": "L", "label": "INTRACOMPANY TRANSFEREE (L)" },
+            { "value": "O", "label": "EXTRAORDINARY ABILITY (O)" }
+          ]
+        },
+        {
+          "fieldId": "specify_b_visa",
+          "label": "Specify",
+          "helpText": "Select the specific B visa subtype that applies to your trip.",
+          "type": "select",
+          "required": true,
+          "showWhen": { "field": "purpose_of_trip", "op": "eq", "value": "B" },
+          "options": [
+            { "value": "B1", "label": "BUSINESS (B1)" },
+            { "value": "B2", "label": "TOURISM/MEDICAL TREATMENT (B2)" },
+            { "value": "B1B2", "label": "BUSINESS & TOURISM (TEMPORARY VISITOR) (B1/B2)" }
+          ]
+        },
+        {
+          "fieldId": "specify_f_visa",
+          "label": "Specify",
+          "helpText": "Select the specific F visa subtype that applies.",
+          "type": "select",
+          "required": true,
+          "showWhen": { "field": "purpose_of_trip", "op": "eq", "value": "F" },
+          "options": [
+            { "value": "F1", "label": "STUDENT (F1)" },
+            { "value": "F2", "label": "SPOUSE/CHILD OF STUDENT (F2)" }
+          ]
+        },
+        {
+          "fieldId": "sevis_number",
+          "label": "SEVIS Number",
+          "helpText": "Your SEVIS ID number is found on your Form I-20. It begins with the letter N.",
+          "type": "text",
+          "required": true,
+          "showWhen": { "field": "purpose_of_trip", "op": "eq", "value": "F" }
+        },
+        {
+          "fieldId": "intended_arrival_date",
+          "label": "Intended Date of Arrival",
+          "helpText": "If you are unsure of your travel plans, please provide an estimate. Format: DD-MMM-YYYY.",
+          "type": "date",
+          "required": false
+        },
+        {
+          "fieldId": "intended_length_of_stay",
+          "label": "Intended Length of Stay in U.S.",
+          "helpText": "Enter the number of days, weeks, months, or years you plan to stay.",
+          "type": "text",
+          "required": true
+        },
+        {
+          "fieldId": "us_stay_address_street",
+          "label": "Address Where You Will Stay in the U.S. — Street Address (Line 1)",
+          "type": "text",
+          "required": true
+        },
+        {
+          "fieldId": "us_stay_city",
+          "label": "City",
+          "type": "text",
+          "required": true
+        },
+        {
+          "fieldId": "person_paying_for_trip",
+          "label": "Person/Entity Paying for Your Trip",
+          "helpText": "Select who will be paying for your travel expenses.",
+          "type": "select",
+          "required": true,
+          "options": [
+            { "value": "SELF", "label": "SELF" },
+            { "value": "OTHER_PERSON", "label": "OTHER PERSON" },
+            { "value": "OTHER_COMPANY", "label": "OTHER COMPANY/ORGANIZATION" },
+            { "value": "US_PETITIONER", "label": "U.S. PETITIONER" }
+          ]
+        }
+      ]
+    },
+    {
+      "pageId": "previous_us_travel",
+      "pageTitle": "Previous U.S. Travel Information",
+      "description": "NOTE: Provide the following previous U.S. travel information. Provide complete and accurate information to all questions that require an explanation.",
+      "fields": [
+        {
+          "fieldId": "ever_been_in_us",
+          "label": "Have you ever been in the U.S.?",
+          "helpText": "Answer Yes if you have ever visited or lived in the United States for any reason.",
+          "type": "radio",
+          "required": true,
+          "options": [
+            { "value": "Y", "label": "Yes" },
+            { "value": "N", "label": "No" }
+          ]
+        },
+        {
+          "fieldId": "previous_us_visits",
+          "label": "Provide information on your last five U.S. visits",
+          "helpText": "If you are unsure about when you visited the U.S., please provide a best estimate. Include date arrived and length of stay.",
+          "type": "table",
+          "required": true,
+          "showWhen": { "field": "ever_been_in_us", "op": "eq", "value": "Y" }
+        },
+        {
+          "fieldId": "ever_issued_us_visa",
+          "label": "Have you ever been issued a U.S. Visa?",
+          "helpText": "Include any visa type, even if expired. You will be asked for the date and visa number.",
+          "type": "yes_no_with_followup",
+          "required": true
+        },
+        {
+          "fieldId": "ever_refused_us_visa",
+          "label": "Have you ever been refused a U.S. Visa, or been refused admission to the United States, or withdrawn your application for admission at the port of entry?",
+          "type": "radio",
+          "required": true,
+          "options": [
+            { "value": "Y", "label": "Yes" },
+            { "value": "N", "label": "No" }
+          ]
+        },
+        {
+          "fieldId": "immigrant_petition_filed",
+          "label": "Has anyone ever filed an immigrant petition on your behalf with the United States Citizenship and Immigration Services?",
+          "type": "radio",
+          "required": true,
+          "options": [
+            { "value": "Y", "label": "Yes" },
+            { "value": "N", "label": "No" }
+          ]
+        }
+      ]
+    },
+    {
+      "pageId": "final_review",
+      "pageTitle": "Review and Generate Worksheet",
+      "description": "Review all your answers. Download your DS-160 preparation worksheet when ready.",
+      "fields": []
+    }
+  ]
+}
