@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import { useFormStore } from "@/store/useFormStore";
 
 interface SubmissionSummaryProps {
@@ -8,6 +9,34 @@ interface SubmissionSummaryProps {
 
 export default function SubmissionSummary({ onComplete }: SubmissionSummaryProps) {
   const { formData, getCompletionPercentage } = useFormStore();
+  const [downloading, setDownloading] = useState(false);
+
+  const handleDownload = async () => {
+    setDownloading(true);
+    try {
+      const response = await fetch("/api/generate-pdf", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(formData),
+      });
+
+      if (!response.ok) throw new Error("PDF generation failed");
+
+      const blob = await response.blob();
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = "ds160-worksheet.pdf";
+      a.click();
+      URL.revokeObjectURL(url);
+      onComplete();
+    } catch (err) {
+      console.error(err);
+      alert("PDF generation failed. Please try again.");
+    } finally {
+      setDownloading(false);
+    }
+  };
 
   const sections = [
     {
@@ -80,10 +109,11 @@ export default function SubmissionSummary({ onComplete }: SubmissionSummaryProps
       </div>
 
       <button
-        onClick={onComplete}
-        className="w-full mt-4 bg-green-500 text-white rounded-lg py-2 text-sm font-medium hover:bg-green-600 transition-colors"
+        onClick={handleDownload}
+        disabled={downloading}
+        className="w-full mt-4 bg-green-500 text-white rounded-lg py-2 text-sm font-medium hover:bg-green-600 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
       >
-        Download Worksheet (PDF)
+        {downloading ? "Generating PDF..." : "Download Worksheet (PDF)"}
       </button>
     </div>
   );
