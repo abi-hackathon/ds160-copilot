@@ -21,8 +21,22 @@ interface PassportExtractorProps {
   onComplete: (data: ExtractedPassportData) => void;
 }
 
+const FIELD_LABELS: Record<string, string> = {
+  surnames: "Surnames",
+  given_names: "Given Names",
+  nationality: "Nationality",
+  sex: "Sex",
+  date_of_birth: "Date of Birth",
+  city_of_birth: "City of Birth",
+  country_of_birth: "Country of Birth",
+  passport_number: "Passport Number",
+  passport_date_of_issue: "Date of Issue",
+  passport_date_of_expiry: "Date of Expiry",
+  passport_place_of_issue: "Place of Issue",
+};
+
 export default function PassportExtractor({ onComplete }: PassportExtractorProps) {
-  const [status, setStatus] = useState<"idle" | "uploading" | "extracting" | "done" | "error">("idle");
+  const [status, setStatus] = useState<"idle" | "extracting" | "done" | "error">("idle");
   const [preview, setPreview] = useState<string | null>(null);
   const [extracted, setExtracted] = useState<ExtractedPassportData | null>(null);
   const fileRef = useRef<HTMLInputElement>(null);
@@ -31,7 +45,6 @@ export default function PassportExtractor({ onComplete }: PassportExtractorProps
   const handleFile = async (file: File) => {
     if (!file) return;
 
-    // Show preview
     const reader = new FileReader();
     reader.onload = (e) => setPreview(e.target?.result as string);
     reader.readAsDataURL(file);
@@ -39,7 +52,6 @@ export default function PassportExtractor({ onComplete }: PassportExtractorProps
     setStatus("extracting");
 
     try {
-      // Convert to base64
       const base64 = await new Promise<string>((resolve, reject) => {
         const r = new FileReader();
         r.onload = () => resolve((r.result as string).split(",")[1]);
@@ -47,14 +59,10 @@ export default function PassportExtractor({ onComplete }: PassportExtractorProps
         r.readAsDataURL(file);
       });
 
-      // Call Claude vision via our API route
       const response = await fetch("/api/extract-passport", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          imageBase64: base64,
-          mediaType: file.type,
-        }),
+        body: JSON.stringify({ imageBase64: base64, mediaType: file.type }),
       });
 
       if (!response.ok) throw new Error("Extraction failed");
@@ -77,7 +85,6 @@ export default function PassportExtractor({ onComplete }: PassportExtractorProps
         <p className="text-xs text-gray-400 mt-1">Claude will extract your details automatically</p>
       </div>
 
-      {/* Drop zone */}
       {status === "idle" && (
         <div
           className="cursor-pointer flex flex-col items-center gap-2 py-6"
@@ -104,12 +111,9 @@ export default function PassportExtractor({ onComplete }: PassportExtractorProps
         </div>
       )}
 
-      {/* Extracting state */}
       {status === "extracting" && (
         <div className="flex flex-col items-center gap-3 py-6">
-          {preview && (
-            <img src={preview} alt="Passport preview" className="w-48 rounded-lg opacity-60" />
-          )}
+          {preview && <img src={preview} alt="Passport preview" className="w-48 rounded-lg opacity-60" />}
           <div className="flex items-center gap-2 text-sm text-blue-600">
             <span className="animate-spin">⏳</span>
             <span>Extracting passport details...</span>
@@ -117,34 +121,29 @@ export default function PassportExtractor({ onComplete }: PassportExtractorProps
         </div>
       )}
 
-      {/* Done state */}
       {status === "done" && extracted && (
         <div className="space-y-2">
-          {preview && (
-            <img src={preview} alt="Passport preview" className="w-full rounded-lg mb-3" />
-          )}
+          {preview && <img src={preview} alt="Passport preview" className="w-full rounded-lg mb-3" />}
           <p className="text-xs font-semibold text-green-600 mb-2">✅ Extracted successfully</p>
-          <div className="grid grid-cols-2 gap-1 text-xs">
-            {Object.entries(extracted).map(([key, value]) =>
-              value ? (
-                <div key={key} className="bg-gray-50 rounded p-1">
-                  <span className="text-gray-400 capitalize">{key.replace(/_/g, " ")}: </span>
-                  <span className="font-medium text-gray-700">{value}</span>
+          <div className="max-h-48 overflow-y-auto space-y-1 pr-1">
+            {Object.entries(FIELD_LABELS).map(([key, label]) => {
+              const value = extracted[key as keyof ExtractedPassportData];
+              if (!value) return null;
+              return (
+                <div key={key} className="flex justify-between bg-gray-50 rounded px-2 py-1">
+                  <span className="text-xs text-gray-400">{label}</span>
+                  <span className="text-xs font-medium text-gray-700 text-right ml-2">{value}</span>
                 </div>
-              ) : null
-            )}
+              );
+            })}
           </div>
         </div>
       )}
 
-      {/* Error state */}
       {status === "error" && (
         <div className="text-center py-4">
           <p className="text-sm text-red-500">❌ Extraction failed. Please try again.</p>
-          <button
-            className="mt-2 text-xs text-blue-500 underline"
-            onClick={() => setStatus("idle")}
-          >
+          <button className="mt-2 text-xs text-blue-500 underline" onClick={() => setStatus("idle")}>
             Try again
           </button>
         </div>

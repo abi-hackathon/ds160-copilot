@@ -114,11 +114,11 @@ export default function TravelHistoryTable({ onComplete }: TravelHistoryWidgetPr
                 onChange={(e) => updateVisit(index, "date_arrived", e.target.value)}
               />
               <input
-                type="number"
+                type="number" min="1"
                 placeholder="Length"
                 className="border border-gray-200 rounded-lg p-1.5 text-xs focus:outline-none focus:ring-1 focus:ring-blue-400"
                 value={visit.length_of_stay}
-                onChange={(e) => updateVisit(index, "length_of_stay", e.target.value)}
+                onChange={(e) => {const val = Math.max(1, parseInt(e.target.value) || 1); updateVisit(index, "length_of_stay", String(val));}}
               />
               <div className="flex gap-1 items-center">
                 <select
