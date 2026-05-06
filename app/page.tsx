@@ -4,49 +4,52 @@ import { useCopilotAction, useCopilotReadable } from "@copilotkit/react-core";
 import { CopilotSidebar } from "@copilotkit/react-ui";
 import PassportExtractor from "@/components/PassportExtractor";
 import PurposeOfTripWidget from "@/components/PurposeOfTripWidget";
+import TravelHistoryTable from "@/components/TravelHistoryTable";
 import { useFormStore } from "@/store/useFormStore";
 
 export default function Home() {
   const { formData, getCompletionPercentage } = useFormStore();
 
-  // Give Claude visibility into current form state
   useCopilotReadable({
     description: "Current DS-160 form state — what fields are filled and what still needs to be collected",
     value: formData,
   });
 
-  // Action 1: Passport extraction
   useCopilotAction({
     name: "show_passport_extractor",
     description:
       "Show the passport upload widget to extract personal information from the user's passport bio page. Use this at the start of the session or when the user wants to upload their passport.",
     parameters: [],
-    handler: async () => {
-      return "Passport extractor shown to user.";
-    },
+    handler: async () => "Passport extractor shown to user.",
     render: () => (
       <PassportExtractor
-        onComplete={(data) => {
-          console.log("Passport extracted:", data);
-        }}
+        onComplete={(data) => console.log("Passport extracted:", data)}
       />
     ),
   });
 
-  // Action 2: Purpose of trip
   useCopilotAction({
     name: "show_purpose_of_trip",
     description:
       "Show the visa type selection widget. Use this after passport extraction or when the user needs to specify their purpose of travel to the US.",
     parameters: [],
-    handler: async () => {
-      return "Purpose of trip widget shown to user.";
-    },
+    handler: async () => "Purpose of trip widget shown to user.",
     render: () => (
       <PurposeOfTripWidget
-        onComplete={(data) => {
-          console.log("Purpose of trip saved:", data);
-        }}
+        onComplete={(data) => console.log("Purpose of trip saved:", data)}
+      />
+    ),
+  });
+
+  useCopilotAction({
+    name: "show_travel_history",
+    description:
+      "Show the previous US travel history widget. Use this after purpose of trip is set, or when the user wants to enter their previous US travel information, visa history, or visa refusals.",
+    parameters: [],
+    handler: async () => "Travel history widget shown to user.",
+    render: () => (
+      <TravelHistoryTable
+        onComplete={(data) => console.log("Travel history saved:", data)}
       />
     ),
   });
@@ -96,6 +99,9 @@ export default function Home() {
               )}
               {formData.purpose_of_trip && (
                 <div><span className="text-gray-400">Visa Type: </span><span className="font-medium">{formData.purpose_of_trip}</span></div>
+              )}
+              {formData.ever_been_in_us && (
+                <div><span className="text-gray-400">Been in US: </span><span className="font-medium">{formData.ever_been_in_us === "Y" ? "Yes" : "No"}</span></div>
               )}
             </div>
           </div>
