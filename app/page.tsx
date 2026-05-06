@@ -1,13 +1,21 @@
 "use client";
 
-import { useCopilotAction } from "@copilotkit/react-core";
+import { useCopilotAction, useCopilotReadable } from "@copilotkit/react-core";
 import { CopilotSidebar } from "@copilotkit/react-ui";
 import PassportExtractor from "@/components/PassportExtractor";
+import PurposeOfTripWidget from "@/components/PurposeOfTripWidget";
 import { useFormStore } from "@/store/useFormStore";
 
 export default function Home() {
   const { formData, getCompletionPercentage } = useFormStore();
 
+  // Give Claude visibility into current form state
+  useCopilotReadable({
+    description: "Current DS-160 form state — what fields are filled and what still needs to be collected",
+    value: formData,
+  });
+
+  // Action 1: Passport extraction
   useCopilotAction({
     name: "show_passport_extractor",
     description:
@@ -16,15 +24,31 @@ export default function Home() {
     handler: async () => {
       return "Passport extractor shown to user.";
     },
-    render: () => {
-      return (
-        <PassportExtractor
-          onComplete={(data) => {
-            console.log("Passport extracted:", data);
-          }}
-        />
-      );
+    render: () => (
+      <PassportExtractor
+        onComplete={(data) => {
+          console.log("Passport extracted:", data);
+        }}
+      />
+    ),
+  });
+
+  // Action 2: Purpose of trip
+  useCopilotAction({
+    name: "show_purpose_of_trip",
+    description:
+      "Show the visa type selection widget. Use this after passport extraction or when the user needs to specify their purpose of travel to the US.",
+    parameters: [],
+    handler: async () => {
+      return "Purpose of trip widget shown to user.";
     },
+    render: () => (
+      <PurposeOfTripWidget
+        onComplete={(data) => {
+          console.log("Purpose of trip saved:", data);
+        }}
+      />
+    ),
   });
 
   return (
@@ -69,6 +93,9 @@ export default function Home() {
               )}
               {formData.sex && (
                 <div><span className="text-gray-400">Sex: </span><span className="font-medium">{formData.sex === "M" ? "Male" : "Female"}</span></div>
+              )}
+              {formData.purpose_of_trip && (
+                <div><span className="text-gray-400">Visa Type: </span><span className="font-medium">{formData.purpose_of_trip}</span></div>
               )}
             </div>
           </div>
