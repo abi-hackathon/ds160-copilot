@@ -1,81 +1,13 @@
 "use client";
 
-import { useCopilotAction, useCopilotReadable } from "@copilotkit/react-core";
 import { CopilotSidebar } from "@copilotkit/react-ui";
-import PassportExtractor from "@/components/PassportExtractor";
-import PurposeOfTripWidget from "@/components/PurposeOfTripWidget";
-import TravelHistoryTable from "@/components/TravelHistoryTable";
-import PersonalInfoCard from "@/components/PersonalInfoCard";
-import SubmissionSummary from "@/components/SubmissionSummary";
 import { useFormStore } from "@/store/useFormStore";
+import { useDS160Actions } from "@/hooks/useDS160Actions";
 
 export default function Home() {
   const { formData, getCompletionPercentage } = useFormStore();
 
-  useCopilotReadable({
-    description: "Current DS-160 form state — what fields are filled and what still needs to be collected",
-    value: formData,
-  });
-
-  useCopilotAction({
-    name: "show_passport_extractor",
-    description: "Show the passport upload widget to extract personal information from the user's passport bio page. Use this at the start of the session or when the user wants to upload their passport.",
-    parameters: [],
-    handler: async () => "Passport extractor shown to user.",
-    render: () => (
-      <PassportExtractor
-        onComplete={(data) => console.log("Passport extracted:", data)}
-      />
-    ),
-  });
-
-  useCopilotAction({
-    name: "show_purpose_of_trip",
-    description: "Show the visa type selection widget. Use this after passport extraction or when the user needs to specify their purpose of travel to the US.",
-    parameters: [],
-    handler: async () => "Purpose of trip widget shown to user.",
-    render: () => (
-      <PurposeOfTripWidget
-        onComplete={(data) => console.log("Purpose of trip saved:", data)}
-      />
-    ),
-  });
-
-  useCopilotAction({
-    name: "show_travel_history",
-    description: "Show the previous US travel history widget. Use this after purpose of trip is set, or when the user wants to enter their previous US travel information, visa history, or visa refusals.",
-    parameters: [],
-    handler: async () => "Travel history widget shown to user.",
-    render: () => (
-      <TravelHistoryTable
-        onComplete={(data) => console.log("Travel history saved:", data)}
-      />
-    ),
-  });
-
-  useCopilotAction({
-    name: "show_personal_info_review",
-    description: "Show the personal information review card so the user can verify and correct details extracted from their passport. Use this after passport extraction.",
-    parameters: [],
-    handler: async () => "Personal info review shown to user.",
-    render: () => (
-      <PersonalInfoCard
-        onComplete={(data) => console.log("Personal info confirmed:", data)}
-      />
-    ),
-  });
-
-  useCopilotAction({
-    name: "show_submission_summary",
-    description: "Show the final DS-160 preparation summary with all collected information. Use this when the user asks to review everything, see a summary, or download their worksheet.",
-    parameters: [],
-    handler: async () => "Submission summary shown to user.",
-    render: () => (
-      <SubmissionSummary
-        onComplete={() => console.log("PDF download requested")}
-      />
-    ),
-  });
+  useDS160Actions();
 
   return (
     <main className="flex min-h-screen flex-col items-center justify-center p-8 bg-gray-50">
