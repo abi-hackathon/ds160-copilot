@@ -38,7 +38,7 @@ const runtime = new CopilotRuntime({
     default: new BuiltInAgent({
       model: "anthropic:claude-sonnet-4-5",
       apiKey: process.env.ANTHROPIC_API_KEY,
-      systemPrompt: SYSTEM_PROMPT,
+      prompt: SYSTEM_PROMPT,
     }),
   },
 });
