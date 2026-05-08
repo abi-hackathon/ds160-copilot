@@ -91,7 +91,9 @@ export const POST = async (req: NextRequest) => {
   try {
     const formData: DS160FormData = await req.json();
     const buffer = await renderToBuffer(buildDoc(formData));
-    return new NextResponse(buffer, {
+    const uint8 = new Uint8Array(buffer);
+    const uint8 = new Uint8Array(buffer);
+    return new NextResponse(uint8, {
       headers: {
         "Content-Type": "application/pdf",
         "Content-Disposition": 'attachment; filename="ds160-worksheet.pdf"',
