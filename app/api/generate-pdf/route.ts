@@ -92,7 +92,6 @@ export const POST = async (req: NextRequest) => {
     const formData: DS160FormData = await req.json();
     const buffer = await renderToBuffer(buildDoc(formData));
     const uint8 = new Uint8Array(buffer);
-    const uint8 = new Uint8Array(buffer);
     return new NextResponse(uint8, {
       headers: {
         "Content-Type": "application/pdf",
