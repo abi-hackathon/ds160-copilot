@@ -17,6 +17,7 @@ export interface DS160FormData {
   national_id_number: string;
 
   // Passport
+  passport_type: string;
   passport_number: string;
   passport_date_of_issue: string;
   passport_date_of_expiry: string;
@@ -59,6 +60,7 @@ const emptyForm: DS160FormData = {
   country_of_birth: "",
   nationality: "",
   national_id_number: "",
+  passport_type: "",
   passport_number: "",
   passport_date_of_issue: "",
   passport_date_of_expiry: "",

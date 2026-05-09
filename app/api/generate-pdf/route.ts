@@ -62,6 +62,7 @@ function buildDoc(f: DS160FormData) {
         field("National ID Number", f.national_id_number || "Does Not Apply")
       ),
       section("PASSPORT",
+        field("Passport/Travel Document Type", f.passport_type),
         field("Passport Number", f.passport_number),
         field("Date of Issue", f.passport_date_of_issue),
         field("Date of Expiry", f.passport_date_of_expiry),
