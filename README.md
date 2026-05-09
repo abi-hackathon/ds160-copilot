@@ -1,36 +1,100 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# DS-160 Copilot
 
-## Getting Started
+> AI-powered preparation tool for the US DS-160 Nonimmigrant Visa Application
 
-First, run the development server:
+**Live Demo:** https://ds160-copilot.vercel.app
+
+---
+
+## The Problem
+
+The DS-160 is a 40+ page US visa application form — entirely in English, with strict formatting requirements, and zero guidance for first-time applicants. One wrong answer can delay or reject your application.
+
+Most applicants are non-native English speakers filling out a government form they've never seen before.
+
+**I built this because my mom needed help filling out her DS-160.**
+
+---
+
+## The Solution
+
+DS-160 Copilot is a **generative UI** form preparation tool. Upload your passport, and Claude guides you through the form field by field — rendering the right widget for each section automatically.
+
+### How it works
+
+1. **Upload passport photo** → Claude vision extracts 10 fields automatically (name, DOB, passport number, place of issue, dates)
+2. **Agent guides you** through each DS-160 section using purpose-built widgets
+3. **Download a PDF worksheet** with everything pre-filled and ready to enter at ceac.state.gov
+
+---
+
+## Architecture
+Passport Image → Claude Vision → Zustand Store → useCopilotReadable
+↓
+Deterministic Engine
+↓
+Agent decides how to ask
+↓
+Widget renders in chat
+
+**Key design decision:** A deterministic next-field engine decides *what* to ask next. The Claude agent decides *how* to ask it. This is controlled generative UI — not open-ended chat.
+
+### Pattern used
+`useCopilotAction` + `renderAndWaitForResponse` — controlled generative UI, not Open Generative UI.
+
+---
+
+## Widgets
+
+| Widget | DS-160 Section | Fields |
+|--------|---------------|--------|
+| `PassportExtractor` | Personal Info 1 | 10 fields via Claude vision |
+| `PassportWidget` | Passport | Type, number, dates, place |
+| `PurposeOfTripWidget` | Travel Information | Visa type, arrival, address, payer |
+| `TravelHistoryTable` | Previous US Travel | Visits, visa history, refusals |
+| `PersonalInfoCard` | Personal Info Review | Verify/correct extracted data |
+| `SubmissionSummary` | Final Review | PDF worksheet download |
+
+---
+
+## Tech Stack
+
+- **Next.js 16** — App Router, TypeScript, Tailwind CSS
+- **CopilotKit v1.50** — `useCopilotAction`, `useCopilotReadable`, `BuiltInAgent`
+- **Anthropic Claude Sonnet** — Vision extraction + agent reasoning
+- **Zustand** — Form state management
+- **@react-pdf/renderer** — PDF worksheet generation
+- **Vercel** — Deployment
+
+---
+
+## Running Locally
+
+```bash
+git clone https://github.com/abi-hackathon/ds160-copilot
+cd ds160-copilot
+npm install
+```
+
+Create `.env.local`:
+ANTHROPIC_API_KEY=your-api-key-here
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open [http://localhost:3000](http://localhost:3000)
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+---
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Built For
 
-## Learn More
+**AI Tinkerers Atlanta Hackathon — May 2026**
 
-To learn more about Next.js, take a look at the following resources:
+Solo build · 5 days · First hackathon
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+---
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## Disclaimer
 
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+This tool is for preparation purposes only. Users must enter their information directly into the official DS-160 form at [ceac.state.gov](https://ceac.state.gov). This is not an official US government product.
